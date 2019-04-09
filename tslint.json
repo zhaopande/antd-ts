@@ -3,17 +3,15 @@
     "rules":{
       "no-console":false,
       "no-debugger":false,
-      "indent":[true, "spaces", 2], // 缩进
-      "no-consecutive-blank-lines": [// 空行不超过两行
+      "indent":[true, "spaces", 2], 
+      "no-consecutive-blank-lines": [
         true,
         2
       ],
       "jsx-no-lambda": false,
       "member-access":false,
-      // 检查对象中键的排序
       "object-literal-sort-keys": false,
       "interface-over-type-literal":false,
-      // 倒入（import）源的排序规则
       "ordered-imports": false
     },
     "linterOptions": {
