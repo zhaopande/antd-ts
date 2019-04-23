@@ -2,6 +2,7 @@ import * as React from 'react'
 import {
     Layout, Menu, Breadcrumb, Icon
 } from 'antd';
+import  "./main.css";
 const { SubMenu } = Menu;
 const { Header, Content, Sider } = Layout;
 
