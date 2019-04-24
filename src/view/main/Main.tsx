@@ -2,7 +2,7 @@ import * as React from 'react'
 import {
     Layout, Menu, Breadcrumb, Icon
 } from 'antd';
-import  "./main.css";
+import "./main.css";
 const { SubMenu } = Menu;
 const { Header, Content, Sider } = Layout;
 
@@ -17,12 +17,15 @@ interface MainState {
 
 class Main extends React.Component<MainProps, MainState> {
     // constructor(props: MainProps) {
-    //     super(props);
-
+    //     super(props)
     // };
-    public  state: MainState = {
+    public state: MainState = {
         defaultState: "1"
     }
+
+    // public componentDidMount(){
+    //     console.log("aaaa");
+    // }
     render() {
         return (<Layout>
             <Header className="header">
@@ -76,7 +79,7 @@ class Main extends React.Component<MainProps, MainState> {
                         background: '#fff', padding: 24, margin: 0, minHeight: 280,
                     }}
                     >
-                        Content
+                        Content{this.state}
               </Content>
                 </Layout>
             </Layout>

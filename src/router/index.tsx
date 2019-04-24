@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { Route, HashRouter as Router, Switch } from 'react-router-dom';
 // import App from '@/App';
-import Main from '@/view/Main';
+import Main from '@/view/main/Main';
 export default function () {
     return (
     <Router>
