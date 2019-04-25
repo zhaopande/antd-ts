@@ -2,29 +2,29 @@ import * as React from 'react'
 import {
     Layout, Menu, Breadcrumb, Icon
 } from 'antd';
+import { Route, Switch,Link} from 'react-router-dom';
 import "./main.css";
 const { SubMenu } = Menu;
 const { Header, Content, Sider } = Layout;
+import userList from '@/view/userManagement/userList';
+import addUser from '@/view/userManagement/addUser';
 
 interface MainProps {
-    defaultProps?: string
+    title?: string
 
 }
-
 interface MainState {
-    defaultState?: string
+    name?: string
 }
 
 class Main extends React.Component<MainProps, MainState> {
-    // constructor(props: MainProps) {
-    //     super(props);
-    //     // this.setState = {
-    //     //     defaultState: "1"
-    //     // }
-    // };Objects are not valid as a React child (found: object with keys {defaultState}). If you meant to render a collection of children, use an array instead.
-    // public  state: MainState = {
-        // defaultState: "1",
-    //   }
+    public state: MainState = {
+        name: "state",
+    }
+    constructor(props: MainProps, state: MainState) {
+        super(props, state);
+    };
+
     public componentDidMount() {
         console.log("aaaa");
         console.log(this);
@@ -39,7 +39,7 @@ class Main extends React.Component<MainProps, MainState> {
                     defaultSelectedKeys={['2']}
                     style={{ lineHeight: '64px' }}
                 >
-                    <Menu.Item key="1">nav</Menu.Item>
+                    <Menu.Item key="1"><Link to="/main/userList">nav</Link></Menu.Item>
                     <Menu.Item key="2">nav 2</Menu.Item>
                     <Menu.Item key="3">nav 3</Menu.Item>
                 </Menu>
@@ -53,8 +53,8 @@ class Main extends React.Component<MainProps, MainState> {
                         style={{ height: '100%', borderRight: 0 }}
                     >
                         <SubMenu key="sub1" title={<span><Icon type="user" />subnav 1</span>}>
-                            <Menu.Item key="1">option1</Menu.Item>
-                            <Menu.Item key="2">option2</Menu.Item>
+                            <Menu.Item key="1"><Link to="/main/userList">用户列表</Link></Menu.Item>
+                            <Menu.Item key="2"><Link to="/main/addUser">添加用户</Link></Menu.Item>
                             <Menu.Item key="3">option3</Menu.Item>
                             <Menu.Item key="4">option4</Menu.Item>
                         </SubMenu>
@@ -82,7 +82,10 @@ class Main extends React.Component<MainProps, MainState> {
                         background: '#fff', padding: 24, margin: 0, minHeight: 280,
                     }}
                     >
-                        Content{this.state}
+                        <Switch>
+                            <Route path="/main/userList" component={userList} />
+                            <Route path="/main/addUser" component={addUser} />
+                        </Switch>
                     </Content>
                 </Layout>
             </Layout>
