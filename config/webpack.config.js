@@ -24,7 +24,6 @@ const ModuleNotFoundPlugin = require('react-dev-utils/ModuleNotFoundPlugin');
 const ForkTsCheckerWebpackPlugin = require('react-dev-utils/ForkTsCheckerWebpackPlugin');
 const typescriptFormatter = require('react-dev-utils/typescriptFormatter');
 const TsconfigPathsPlugin = require("tsconfig-paths-webpack-plugin")
-
 // Source maps are resource heavy and can cause out of memory issue for large source files.
 const shouldUseSourceMap = process.env.GENERATE_SOURCEMAP !== 'false';
 // Some apps do not need the benefits of saving a web request, so not inlining the chunk
@@ -38,6 +37,7 @@ const useTypeScript = fs.existsSync(paths.appTsConfig);
 const cssRegex = /\.css$/;
 const cssModuleRegex = /\.module\.css$/;
 const sassRegex = /\.(scss|sass)$/;
+const lessRegex = /\.(less)$/;
 const sassModuleRegex = /\.module\.(scss|sass)$/;
 
 // This is the production and development configuration.
@@ -306,6 +306,7 @@ module.exports = function (webpackEnv) {
               },
               loader: require.resolve('eslint-loader'),
             },
+
           ],
           include: paths.appSrc,
         },
@@ -469,6 +470,12 @@ module.exports = function (webpackEnv) {
               options: {
                 name: 'static/media/[name].[hash:8].[ext]',
               },
+            },
+            {
+              loader: require.resolve('less-loader'), // compiles Less to CSS
+              // options:{
+              //   modifyVars: theme,
+              // }
             },
             // ** STOP ** Are you adding a new loader?
             // Make sure to add the new loader(s) before the "file" loader.

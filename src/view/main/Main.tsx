@@ -17,16 +17,19 @@ interface MainState {
 
 class Main extends React.Component<MainProps, MainState> {
     // constructor(props: MainProps) {
-    //     super(props)
-    // };
-    public state: MainState = {
-        defaultState: "1"
+    //     super(props);
+    //     // this.setState = {
+    //     //     defaultState: "1"
+    //     // }
+    // };Objects are not valid as a React child (found: object with keys {defaultState}). If you meant to render a collection of children, use an array instead.
+    // public  state: MainState = {
+        // defaultState: "1",
+    //   }
+    public componentDidMount() {
+        console.log("aaaa");
+        console.log(this);
     }
-
-    // public componentDidMount(){
-    //     console.log("aaaa");
-    // }
-    render() {
+    public render() {
         return (<Layout>
             <Header className="header">
                 <div className="logo" />
@@ -80,7 +83,7 @@ class Main extends React.Component<MainProps, MainState> {
                     }}
                     >
                         Content{this.state}
-              </Content>
+                    </Content>
                 </Layout>
             </Layout>
         </Layout>
