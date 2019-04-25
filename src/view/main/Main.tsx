@@ -2,24 +2,29 @@ import * as React from 'react'
 import {
     Layout, Menu, Breadcrumb, Icon
 } from 'antd';
-import { Route, Switch,Link} from 'react-router-dom';
+import { Route, Switch, Link } from 'react-router-dom';
 import "./main.css";
 const { SubMenu } = Menu;
 const { Header, Content, Sider } = Layout;
 import userList from '@/view/userManagement/userList';
 import addUser from '@/view/userManagement/addUser';
 
+interface Location {
+    pathname: string,
+}
 interface MainProps {
-    title?: string
-
+    title?: string,
+    location: Location
 }
 interface MainState {
-    name?: string
+    name?: string,
+    currentPathName: string
 }
 
 class Main extends React.Component<MainProps, MainState> {
     public state: MainState = {
         name: "state",
+        currentPathName: ""
     }
     constructor(props: MainProps, state: MainState) {
         super(props, state);
@@ -27,9 +32,21 @@ class Main extends React.Component<MainProps, MainState> {
 
     public componentDidMount() {
         console.log("aaaa");
-        console.log(this);
+        console.log(this.props.location.pathname);
+        this.setState({
+            currentPathName: this.props.location.pathname
+        })
+        // this.state.currentPathName=this.props.location.pathname;
+    }
+    public itemOnclick(item: any) {
+        console.log(item);
+        this.setState({
+            currentPathName: item.key
+        })
     }
     public render() {
+        const { currentPathName } = this.state;
+        console.log(currentPathName);
         return (<Layout>
             <Header className="header">
                 <div className="logo" />
@@ -48,14 +65,14 @@ class Main extends React.Component<MainProps, MainState> {
                 <Sider width={200} style={{ background: '#fff' }}>
                     <Menu
                         mode="inline"
-                        defaultSelectedKeys={['1']}
+                        defaultSelectedKeys={['/main/userList']}
                         defaultOpenKeys={['sub1']}
                         style={{ height: '100%', borderRight: 0 }}
                     >
                         <SubMenu key="sub1" title={<span><Icon type="user" />subnav 1</span>}>
-                            <Menu.Item key="1"><Link to="/main/userList">用户列表</Link></Menu.Item>
-                            <Menu.Item key="2"><Link to="/main/addUser">添加用户</Link></Menu.Item>
-                            <Menu.Item key="3">option3</Menu.Item>
+                            <Menu.Item key="/main/userList" onClick={(item) => this.itemOnclick(item)}><Link to="/main/userList">用户列表</Link></Menu.Item>
+                            <Menu.Item key="/main/addUser" onClick={(item) => this.itemOnclick(item)}><Link to="/main/addUser">添加用户</Link></Menu.Item>
+                            <Menu.Item key="3"><Link to="/main/addUsers">test</Link></Menu.Item>
                             <Menu.Item key="4">option4</Menu.Item>
                         </SubMenu>
                         <SubMenu key="sub2" title={<span><Icon type="laptop" />subnav 2</span>}>
@@ -86,6 +103,7 @@ class Main extends React.Component<MainProps, MainState> {
                             <Route path="/main/userList" component={userList} />
                             <Route path="/main/addUser" component={addUser} />
                         </Switch>
+
                     </Content>
                 </Layout>
             </Layout>

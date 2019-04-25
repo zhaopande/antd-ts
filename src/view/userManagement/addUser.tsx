@@ -1,5 +1,7 @@
 import * as React from 'react'
-// import {Table} from "antd"
+import {Button} from "antd"
+import { Link } from 'react-router-dom';
+
 export interface UserListProps {
     tilte: string
 }
@@ -16,6 +18,7 @@ class UserList extends React.Component<UserListProps, UserListState> {
     render() {
         return (<div>
             {this.state.tableData}
+            <Link to="/main/userList"><Button>userList</Button></Link>
         </div>);
     }
 }
