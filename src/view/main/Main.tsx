@@ -4,10 +4,11 @@ import {
 } from 'antd';
 import { Route, Switch, Link } from 'react-router-dom';
 import "./main.css";
-const { SubMenu } = Menu;
-const { Header, Content, Sider } = Layout;
 import userList from '@/view/userManagement/userList';
 import addUser from '@/view/userManagement/addUser';
+const { SubMenu } = Menu;
+const { Header, Content, Sider } = Layout;
+
 
 interface Location {
     pathname: string,

@@ -1,6 +1,7 @@
 'use strict';
 
 const fs = require('fs');
+const isWsl = require('is-wsl');
 const path = require('path');
 const webpack = require('webpack');
 const resolve = require('resolve');
@@ -19,11 +20,14 @@ const WatchMissingNodeModulesPlugin = require('react-dev-utils/WatchMissingNodeM
 const ModuleScopePlugin = require('react-dev-utils/ModuleScopePlugin');
 const getCSSModuleLocalIdent = require('react-dev-utils/getCSSModuleLocalIdent');
 const paths = require('./paths');
+const modules = require('./modules');
 const getClientEnvironment = require('./env');
 const ModuleNotFoundPlugin = require('react-dev-utils/ModuleNotFoundPlugin');
 const ForkTsCheckerWebpackPlugin = require('react-dev-utils/ForkTsCheckerWebpackPlugin');
 const typescriptFormatter = require('react-dev-utils/typescriptFormatter');
-const TsconfigPathsPlugin = require("tsconfig-paths-webpack-plugin")
+
+const postcssNormalize = require('postcss-normalize');
+const theme = require('../theme').theme;
 // Source maps are resource heavy and can cause out of memory issue for large source files.
 const shouldUseSourceMap = process.env.GENERATE_SOURCEMAP !== 'false';
 // Some apps do not need the benefits of saving a web request, so not inlining the chunk
@@ -37,8 +41,9 @@ const useTypeScript = fs.existsSync(paths.appTsConfig);
 const cssRegex = /\.css$/;
 const cssModuleRegex = /\.module\.css$/;
 const sassRegex = /\.(scss|sass)$/;
-const lessRegex = /\.(less)$/;
 const sassModuleRegex = /\.module\.(scss|sass)$/;
+const lessRegex = /\.less$/;
+const lessModuleRegex = /\.module\.less$/;
 
 // This is the production and development configuration.
 // It is focused on developer experience, fast rebuilds, and a minimal bundle.
@@ -97,18 +102,29 @@ module.exports = function (webpackEnv) {
               },
               stage: 3,
             }),
+            // Adds PostCSS Normalize as the reset css with default options,
+            // so that it honors browserslist config in package.json
+            // which in turn let's users customize the target behavior as per their needs.
+            postcssNormalize(),
           ],
           sourceMap: isEnvProduction && shouldUseSourceMap,
         },
       },
+      { loader: require.resolve('less-loader') }
     ].filter(Boolean);
     if (preProcessor) {
-      loaders.push({
+      let singleLoader = {
         loader: require.resolve(preProcessor),
         options: {
           sourceMap: isEnvProduction && shouldUseSourceMap,
         },
-      });
+      };
+
+      if (preProcessor == 'less-loader') {
+        singleLoader.options.modifyVars = theme;
+        singleLoader.options.javascriptEnabled = true;
+      }
+      loaders.push(singleLoader)
     }
     return loaders;
   };
@@ -153,6 +169,8 @@ module.exports = function (webpackEnv) {
       filename: isEnvProduction
         ? 'static/js/[name].[contenthash:8].js'
         : isEnvDevelopment && 'static/js/bundle.js',
+      // TODO: remove this when upgrading to webpack 5
+      futureEmitAssets: true,
       // There are also additional JS chunk files if you use code splitting.
       chunkFilename: isEnvProduction
         ? 'static/js/[name].[contenthash:8].chunk.js'
@@ -210,7 +228,9 @@ module.exports = function (webpackEnv) {
           },
           // Use multi-process parallel running to improve the build speed
           // Default number of concurrent runs: os.cpus().length - 1
-          parallel: true,
+          // Disabled on WSL (Windows Subsystem for Linux) due to an issue with Terser
+          // https://github.com/webpack-contrib/terser-webpack-plugin/issues/21
+          parallel: !isWsl,
           // Enable file caching
           cache: true,
           sourceMap: shouldUseSourceMap,
@@ -248,10 +268,10 @@ module.exports = function (webpackEnv) {
       // We placed these paths second because we want `node_modules` to "win"
       // if there are any conflicts. This matches Node resolution mechanism.
       // https://github.com/facebook/create-react-app/issues/253
-      modules: ['node_modules'].concat(
-        // It is guaranteed to exist because we tweak it in `env.js`
-        process.env.NODE_PATH.split(path.delimiter).filter(Boolean)
-      ),
+      modules: ['node_modules', paths.appNodeModules].concat(
+        modules.additionalModulePaths || []),
+      // It is guaranteed to exist because we tweak it in `env.js`
+      // process.env.NODE_PATH.split(path.delimiter).filter(Boolean)),
       // These are the reasonable defaults supported by the Node ecosystem.
       // We also include JSX as a common component filename extension to support
       // some tools, although we do not recommend using it, see:
@@ -262,6 +282,7 @@ module.exports = function (webpackEnv) {
         .map(ext => `.${ext}`)
         .filter(ext => useTypeScript || !ext.includes('ts')),
       alias: {
+        "@": path.resolve(__dirname, '../src/'),
         // Support React Native Web
         // https://www.smashingmagazine.com/2016/08/a-glimpse-into-the-future-with-react-native-for-web/
         'react-native': 'react-native-web',
@@ -276,7 +297,6 @@ module.exports = function (webpackEnv) {
         // please link the files into your node_modules/ and let module-resolution kick in.
         // Make sure your source files are compiled, as they will not be processed in any way.
         new ModuleScopePlugin(paths.appSrc, [paths.appPackageJson]),
-        new TsconfigPathsPlugin()//加载tsconfig配置文件
       ],
     },
     resolveLoader: {
@@ -295,7 +315,7 @@ module.exports = function (webpackEnv) {
         // First, run the linter.
         // It's important to do this before Babel processes the JS.
         {
-          test: /\.(js|mjs|jsx)$/,
+          test: /\.(js|mjs|jsx|ts|tsx)$/,
           enforce: 'pre',
           use: [
             {
@@ -306,7 +326,6 @@ module.exports = function (webpackEnv) {
               },
               loader: require.resolve('eslint-loader'),
             },
-
           ],
           include: paths.appSrc,
         },
@@ -348,14 +367,6 @@ module.exports = function (webpackEnv) {
                       },
                     },
                   ],
-                  [
-                    "import",
-                    {
-                      libraryName: "antd",
-                      style: "css"
-                    }
-                  ]
-
                 ],
                 // This is a feature of `babel-loader` for webpack (not Babel itself).
                 // It enables caching results in ./node_modules/.cache/babel-loader/
@@ -455,6 +466,40 @@ module.exports = function (webpackEnv) {
                 'sass-loader'
               ),
             },
+            {
+              test: lessRegex,
+              exclude: lessModuleRegex,
+              use: getStyleLoaders(
+                {
+                  importLoaders: 2,
+                  sourceMap: isEnvProduction && shouldUseSourceMap,
+                },
+                'less-loader'
+              ),
+              // Don't consider CSS imports dead code even if the
+              // containing package claims to have no side effects.
+              // Remove this when webpack adds a warning or an error for this.
+              // See https://github.com/webpack/webpack/issues/6571
+              sideEffects: true,
+            },
+            // Adds support for CSS Modules, but using SASS
+            // using the extension .module.scss or .module.sass
+            {
+              test: lessModuleRegex,
+              use: getStyleLoaders(
+                {
+                  importLoaders: 2,
+                  sourceMap: isEnvProduction && shouldUseSourceMap,
+                  modules: true,
+                  getLocalIdent: getCSSModuleLocalIdent,
+                },
+                'less-loader'
+              ),
+            },
+            // {
+            //   loader: require.resolve('less-loader'),
+            //   options: { singleLoader: theme, javascriptEnabled: true }
+            // },
             // "file" loader makes sure those assets get served by WebpackDevServer.
             // When you `import` an asset, you get its (virtual) filename.
             // In production, they would get copied to the `build` folder.
@@ -470,12 +515,6 @@ module.exports = function (webpackEnv) {
               options: {
                 name: 'static/media/[name].[hash:8].[ext]',
               },
-            },
-            {
-              loader: require.resolve('less-loader'), // compiles Less to CSS
-              // options:{
-              //   modifyVars: theme,
-              // }
             },
             // ** STOP ** Are you adding a new loader?
             // Make sure to add the new loader(s) before the "file" loader.
@@ -556,6 +595,16 @@ module.exports = function (webpackEnv) {
       new ManifestPlugin({
         fileName: 'asset-manifest.json',
         publicPath: publicPath,
+        generate: (seed, files) => {
+          const manifestFiles = files.reduce(function (manifest, file) {
+            manifest[file.name] = file.path;
+            return manifest;
+          }, seed);
+
+          return {
+            files: manifestFiles,
+          };
+        },
       }),
       // Moment.js is an extremely popular library that bundles large locale files
       // by default due to how Webpack interprets its code. This is a practical
@@ -589,10 +638,8 @@ module.exports = function (webpackEnv) {
         useTypescriptIncrementalApi: true,
         checkSyntacticErrors: true,
         tsconfig: paths.appTsConfig,
-        tslint: paths.appTsLint,
         reportFiles: [
           '**',
-          '!**/*.json',
           '!**/__tests__/**',
           '!**/?(*.)(spec|test).*',
           '!**/src/setupProxy.*',
@@ -611,6 +658,7 @@ module.exports = function (webpackEnv) {
       dgram: 'empty',
       dns: 'mock',
       fs: 'empty',
+      http2: 'empty',
       net: 'empty',
       tls: 'empty',
       child_process: 'empty',

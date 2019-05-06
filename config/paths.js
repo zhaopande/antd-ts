@@ -76,13 +76,13 @@ module.exports = {
   appPackageJson: resolveApp('package.json'),
   appSrc: resolveApp('src'),
   appTsConfig: resolveApp('tsconfig.json'),
+  appJsConfig: resolveApp('jsconfig.json'),
   yarnLockFile: resolveApp('yarn.lock'),
   testsSetup: resolveModule(resolveApp, 'src/setupTests'),
   proxySetup: resolveApp('src/setupProxy.js'),
   appNodeModules: resolveApp('node_modules'),
   publicUrl: getPublicUrl(resolveApp('package.json')),
   servedPath: getServedPath(resolveApp('package.json')),
-  appTsLint: resolveApp("tslint.json")
 };
 
 
