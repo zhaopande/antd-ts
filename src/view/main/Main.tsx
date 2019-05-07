@@ -27,13 +27,11 @@ class Main extends React.Component<MainProps, MainState> {
         name: "state",
         currentPathName: ""
     }
-    constructor(props: MainProps, state: MainState) {
-        super(props, state);
-    };
+    // constructor(props: MainProps, state: MainState) {
+    //     super(props, state);
+    // };
 
     public componentDidMount() {
-        console.log("aaaa");
-        console.log(this.props.location.pathname);
         this.setState({
             currentPathName: this.props.location.pathname
         })
@@ -47,7 +45,6 @@ class Main extends React.Component<MainProps, MainState> {
     }
     public render() {
         const { currentPathName } = this.state;
-        console.log(currentPathName);
         return (<Layout>
             <Header className="header">
                 <div className="logo" />
@@ -57,7 +54,7 @@ class Main extends React.Component<MainProps, MainState> {
                     defaultSelectedKeys={['2']}
                     style={{ lineHeight: '64px' }}
                 >
-                    <Menu.Item key="1"><Link to="/main/userList">nav</Link></Menu.Item>
+                    <Menu.Item key="1"><Link to="/main/userList" className="container">nav</Link></Menu.Item>
                     <Menu.Item key="2">nav 2</Menu.Item>
                     <Menu.Item key="3">nav 3</Menu.Item>
                 </Menu>

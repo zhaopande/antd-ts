@@ -1,3 +1,4 @@
+/* eslint-disable strict */
 'use strict';
 
 const fs = require('fs');
@@ -120,7 +121,7 @@ module.exports = function (webpackEnv) {
         },
       };
 
-      if (preProcessor == 'less-loader') {
+      if (preProcessor === 'less-loader') {
         singleLoader.options.modifyVars = theme;
         singleLoader.options.javascriptEnabled = true;
       }
