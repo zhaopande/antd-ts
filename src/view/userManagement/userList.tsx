@@ -2,6 +2,7 @@ import React from 'react'
 import { Button } from "antd"
 import { Link } from 'react-router-dom';
 import "./user.less";
+import { rejects } from 'assert';
 interface UserListProps {
     tilte: string
 }
@@ -19,6 +20,20 @@ class UserList extends React.Component<UserListProps, UserListState> {
     }
     public componentDidMount() {
 
+        console.log("1");
+        this.timing();
+    }
+    private timing = async () => {
+        await new Promise((resolve,rejects) => {
+            "use strict";
+            setTimeout(() => {
+                resolve();
+                console.log(2);
+            }, 1000);
+            console.log("3");
+        });
+        console.log("4");
+
     }
     private mouseOverItem = (e: any) => {
         // console.log(e);
@@ -32,7 +47,6 @@ class UserList extends React.Component<UserListProps, UserListState> {
     }
     private mouseOutItem = (e: any) => {
         const { clickItemText, lastItemPosition } = this.state;
-        let leftDistance = e.target.offsetLeft;
         let currentTargetText = e.currentTarget.innerTextt;
         let underLine: any = document.querySelectorAll(".under-line");
         if (clickItemText != currentTargetText) {
