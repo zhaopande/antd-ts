@@ -45,8 +45,8 @@ class Main extends React.Component<MainProps, MainState> {
         })
     }
     public render() {
-        const { currentPathName } = this.state;
-        console.log(currentPathName);
+        // const { currentPathName } = this.state;
+        // console.log(currentPathName);
         return (<Layout>
             <Header className="header">
                 <div className="logo" />
