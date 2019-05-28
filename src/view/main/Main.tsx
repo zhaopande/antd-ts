@@ -4,8 +4,9 @@ import {
 } from 'antd';
 import { Route, Switch, Link } from 'react-router-dom';
 import "./main.css";
-import userList from '@/view/userManagement/userList';
-import addUser from '@/view/userManagement/addUser';
+import userList from '@/view/main/userManagement/userList';
+import addUser from '@/view/main/userManagement/addUser';
+import functionalTest from '@/view/main/functionalTest';
 const { SubMenu } = Menu;
 const { Header, Content, Sider } = Layout;
 
@@ -19,7 +20,7 @@ interface MainProps {
 }
 interface MainState {
     name?: string,
-    currentPathName: string
+    currentPathName?: string
 }
 
 class Main extends React.Component<MainProps, MainState> {
@@ -45,6 +46,7 @@ class Main extends React.Component<MainProps, MainState> {
     }
     public render() {
         const { currentPathName } = this.state;
+        console.log(currentPathName);
         return (<Layout>
             <Header className="header">
                 <div className="logo" />
@@ -64,17 +66,22 @@ class Main extends React.Component<MainProps, MainState> {
                     <Menu
                         mode="inline"
                         defaultSelectedKeys={['/main/userList']}
-                        defaultOpenKeys={['sub1']}
+                        selectedKeys={((path) => {
+                            let pathnames = path.pathname.split('/')[2];
+                            return [pathnames]
+                        })(this.props.location)}
+                        defaultOpenKeys={['sub1']}  //初始展开的 SubMenu 菜单项 key 数组 
                         style={{ height: '100%', borderRight: 0 }}
                     >
-                        <SubMenu key="sub1" title={<span><Icon type="user" />subnav 1</span>}>
-                            <Menu.Item key="/main/userList" onClick={(item) => this.itemOnclick(item)}><Link to="/main/userList">用户列表</Link></Menu.Item>
-                            <Menu.Item key="/main/addUser" onClick={(item) => this.itemOnclick(item)}><Link to="/main/addUser">添加用户</Link></Menu.Item>
+                        <SubMenu key="sub1" title={<span><Icon type="user" />用户管理</span>}>
+                            <Menu.Item key="userList" onClick={(item) => this.itemOnclick(item)}><Link to="/main/userList">用户列表</Link></Menu.Item>
+                            <Menu.Item key="addUser" onClick={(item) => this.itemOnclick(item)}><Link to="/main/addUser">添加用户</Link></Menu.Item>
                             <Menu.Item key="3"><Link to="/main/addUsers">test</Link></Menu.Item>
                             <Menu.Item key="4">option4</Menu.Item>
                         </SubMenu>
-                        <SubMenu key="sub2" title={<span><Icon type="laptop" />subnav 2</span>}>
-                            <Menu.Item key="5">option5</Menu.Item>
+                        <SubMenu key="sub2" title={<span><Icon type="laptop" />功能</span>}>
+                            <Menu.Item key="functionalTest" onClick={(item) => this.itemOnclick(item)}><Link to="/main/functionalTest">test</Link></Menu.Item>
+                            <Menu.Item key="5">test</Menu.Item>
                             <Menu.Item key="6">option6</Menu.Item>
                             <Menu.Item key="7">option7</Menu.Item>
                             <Menu.Item key="8">option8</Menu.Item>
@@ -100,6 +107,7 @@ class Main extends React.Component<MainProps, MainState> {
                         <Switch>
                             <Route path="/main/userList" component={userList} />
                             <Route path="/main/addUser" component={addUser} />
+                            <Route path="/main/functionalTest" component={functionalTest} />
                         </Switch>
 
                     </Content>

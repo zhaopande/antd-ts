@@ -2,7 +2,7 @@ import React from 'react'
 import { Button } from "antd"
 import { Link } from 'react-router-dom';
 import "./user.less";
-import { rejects } from 'assert';
+// import { rejects } from 'assert';
 interface UserListProps {
     tilte: string
 }
@@ -24,8 +24,7 @@ class UserList extends React.Component<UserListProps, UserListState> {
         this.timing();
     }
     private timing = async () => {
-        await new Promise((resolve,rejects) => {
-            "use strict";
+        await new Promise((resolve, rejects) => {
             setTimeout(() => {
                 resolve();
                 console.log(2);
@@ -49,7 +48,7 @@ class UserList extends React.Component<UserListProps, UserListState> {
         const { clickItemText, lastItemPosition } = this.state;
         let currentTargetText = e.currentTarget.innerTextt;
         let underLine: any = document.querySelectorAll(".under-line");
-        if (clickItemText != currentTargetText) {
+        if (clickItemText !== currentTargetText) {
             underLine[0].style.left = lastItemPosition + "px";
         }
     }
