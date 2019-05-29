@@ -87,7 +87,6 @@ function Example() {
         return () => handleStatusChange(count2);
     });
     function handleStatusChange(status: boolean) {
-        console.log(status == count2);
         setCount2(status);
     }
     return (
