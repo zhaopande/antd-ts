@@ -1,11 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import {
     Layout, Menu, Breadcrumb, Icon
 } from 'antd';
 import { Route, Switch, Link } from 'react-router-dom';
-import Context from "./context"
+import Context from "./context/index"
+import Hoc from "./hoc"
 const { SubMenu } = Menu;
-const { Header, Content, Sider } = Layout;
+const {Content, Sider } = Layout;
 
 interface Location {
     pathname: string,
@@ -40,7 +41,7 @@ class Nav extends React.Component<NavProps, NavState> {
                     >
                         <SubMenu key="sub1" title={<span><Icon type="user" />functional1</span>}>
                             <Menu.Item key="context"><Link to="/functionaltest/context">context</Link></Menu.Item>
-                            <Menu.Item key="4">option4</Menu.Item>
+                            <Menu.Item key="hoc"><Link to="/functionaltest/hoc">hoc</Link></Menu.Item>
                         </SubMenu>
                         <SubMenu key="sub2" title={<span><Icon type="laptop" />功能</span>}>
                             <Menu.Item key="5">test</Menu.Item>
@@ -69,6 +70,7 @@ class Nav extends React.Component<NavProps, NavState> {
                     >
                         <Switch>
                             <Route path="/functionaltest/context" component={Context} />
+                            <Route path="/functionaltest/hoc" component={Hoc} />
                         </Switch>
 
                     </Content>
