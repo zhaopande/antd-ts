@@ -17,21 +17,21 @@ class HeightOrderComponents extends React.Component<HeightOrderComponentsProps, 
         this.state = { defaultState: "1" };
     }
     componentDidMount() {
-        const getHoc=CreacteHOC(TestHoc);
-        console.log(getHoc);
+  
         // this.setState({
         //     hoc:getHoc
         // })
     }
     render() {
+
         return (<div>
             HeightOrderComponents
-            {/* <GethocFun></GethocFun> */}
+            {/* <getHoc ></getHoc> */}
         </div>);
     }
 }
 
-function GethocFun(){
+function GethocFun() {
     return CreacteHOC(TestHoc);
 }
 
@@ -47,27 +47,24 @@ type HOCProps = {
     loading?: string,
     // component: React.Component
 }
-// function withVisible<Self>(WrappedComponent: React.ComponentType<Self & IVisible>): React.ComponentType<Omit<Self, 'visible'>> {
-//     return class extends Component<Self> {
-//         render() {
-//             return <WrappedComponent {...this.props}  visible={true} />
-//         }
-//     }
-// }
 
-function CreacteHOC(Component:React.ComponentType<TestHocProps>) {
-    return class NewComponent extends React.Component {
-        render() {
-            return <Component {...this.props} />
-        }
-    }
+interface WithLoadingProps {
+    loading: boolean;
 }
-
+const CreacteHOC = <P extends object>(
+    Component: React.ComponentType<P>
+): React.FC<P & WithLoadingProps> => ({
+    loading,
+    ...props
+}: WithLoadingProps) =>
+        loading ? <LoadingSpinner /> : <Component {...props as P} />;
 function LoadingSpinner() {
     return (
         <div>LoadingSpinner</div>
     )
 }
+
+
 export interface TestHocProps {
     loading?: Boolean
 }
@@ -97,4 +94,7 @@ class TestHoc extends React.Component<TestHocProps, TestHocState> {
 //         }
 //     }
 // }
-export default HeightOrderComponents;
+
+const getHoc = CreacteHOC(TestHoc);
+console.log(getHoc);
+export default getHoc;
