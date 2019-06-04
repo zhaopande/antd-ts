@@ -5,6 +5,7 @@ import {
 import { Route, Switch, Link } from 'react-router-dom';
 import Context from "./context/index"
 import Hoc from "./hoc"
+import Hook from "./hook"
 const { SubMenu } = Menu;
 const {Content, Sider } = Layout;
 
@@ -42,6 +43,7 @@ class Nav extends React.Component<NavProps, NavState> {
                         <SubMenu key="sub1" title={<span><Icon type="user" />functional1</span>}>
                             <Menu.Item key="context"><Link to="/functionaltest/context">context</Link></Menu.Item>
                             <Menu.Item key="hoc"><Link to="/functionaltest/hoc">hoc</Link></Menu.Item>
+                            <Menu.Item key="hook"><Link to="/functionaltest/hook">hook</Link></Menu.Item>
                         </SubMenu>
                         <SubMenu key="sub2" title={<span><Icon type="laptop" />功能</span>}>
                             <Menu.Item key="5">test</Menu.Item>
@@ -71,6 +73,7 @@ class Nav extends React.Component<NavProps, NavState> {
                         <Switch>
                             <Route path="/functionaltest/context" component={Context} />
                             <Route path="/functionaltest/hoc" component={Hoc} />
+                            <Route path="/functionaltest/hook" component={Hook} />
                         </Switch>
 
                     </Content>
