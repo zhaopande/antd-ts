@@ -6,8 +6,10 @@ import { Route, Switch, Link } from 'react-router-dom';
 import Context from "./context/index"
 import Hoc from "./hoc"
 import Hook from "./hook"
+import Tsdecorator from "./tsdecorator"
+import MouseAndCat from "./mouseAndCat"
 const { SubMenu } = Menu;
-const {Content, Sider } = Layout;
+const { Content, Sider } = Layout;
 
 interface Location {
     pathname: string,
@@ -40,13 +42,14 @@ class Nav extends React.Component<NavProps, NavState> {
                         defaultOpenKeys={['sub1']}  //初始展开的 SubMenu 菜单项 key 数组 
                         style={{ height: '100%', borderRight: 0 }}
                     >
-                        <SubMenu key="sub1" title={<span><Icon type="user" />functional1</span>}>
+                        <SubMenu key="sub1" title={<span><Icon type="user" />react-functional1</span>}>
                             <Menu.Item key="context"><Link to="/functionaltest/context">context</Link></Menu.Item>
                             <Menu.Item key="hoc"><Link to="/functionaltest/hoc">hoc</Link></Menu.Item>
                             <Menu.Item key="hook"><Link to="/functionaltest/hook">hook</Link></Menu.Item>
+                            <Menu.Item key="mouseandcat"><Link to="/functionaltest/mouseandcat">mouseandcat</Link></Menu.Item>
                         </SubMenu>
-                        <SubMenu key="sub2" title={<span><Icon type="laptop" />功能</span>}>
-                            <Menu.Item key="5">test</Menu.Item>
+                        <SubMenu key="sub2" title={<span><Icon type="laptop" />ts-functional</span>}>
+                            <Menu.Item key="tsdecorator"><Link to="/functionaltest/tsdecorator">tsdecorator</Link></Menu.Item>
                             <Menu.Item key="6">option6</Menu.Item>
                             <Menu.Item key="7">option7</Menu.Item>
                             <Menu.Item key="8">option8</Menu.Item>
@@ -74,6 +77,8 @@ class Nav extends React.Component<NavProps, NavState> {
                             <Route path="/functionaltest/context" component={Context} />
                             <Route path="/functionaltest/hoc" component={Hoc} />
                             <Route path="/functionaltest/hook" component={Hook} />
+                            <Route path="/functionaltest/tsdecorator" component={Tsdecorator} />
+                            <Route path="/functionaltest/mouseandcat" component={MouseAndCat} />
                         </Switch>
 
                     </Content>

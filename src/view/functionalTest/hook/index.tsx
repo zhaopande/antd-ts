@@ -69,23 +69,20 @@ class User extends React.Component<UserProps> {
  */
 function Example() {
     const [count, setCount] = useState(0);
-    // 相当于 componentDidMount 和 componentDidUpdate:
     useEffect(() => {
-        // 使用浏览器的 API 更新页面标题
-        // document.title = ` ${count} times`;
-        // console.log(count);
-
+        console.log("count",count);
+        //return是 effect 可选的清除机制。每个 effect 都可以返回一个清除函数。如此可以将添加和移除订阅的逻辑放在一起。它们都属于 effect 的一部分。
+        //React 会在执行当前 effect 之前对上一个 effect 进行清除
+        // return () => console.log("对本次effect清除", count);
     });
-
     const [count2, setCount2] = useState(false);
-    // 相当于 componentDidMount 和 componentDidUpdate:
+    // 相当于 componentDidMount 和 componentDidUpdate,只有数据更新时触发
     useEffect(() => {
-        console.log(count, count2);
-        handleStatusChange(!count2);
-        // console.log(count2);
-        // 使用浏览器的 API 更新页面标题
-        // document.title = ` ${count2} times`;
-        return () => handleStatusChange(count2);//这是 effect 可选的清除机制。每个 effect 都可以返回一个清除函数。如此可以将添加和移除订阅的逻辑放在一起。它们都属于 effect 的一部分。
+        console.log("count2", count2);
+        // handleStatusChange(!count2);
+        //return是 effect 可选的清除机制。每个 effect 都可以返回一个清除函数。如此可以将添加和移除订阅的逻辑放在一起。它们都属于 effect 的一部分。
+        //React 会在执行当前 effect 之前对上一个 effect 进行清除
+        // return () => console.log("对本次effect清除", count2);
     });
     function handleStatusChange(status: boolean) {
         setCount2(status);
@@ -96,6 +93,9 @@ function Example() {
             <p>You clicked {count} times</p>
             <button onClick={() => setCount(count + 1)}>
                 Click count
+        </button>
+            <button onClick={() => setCount(2)}>
+                Click 2 count
         </button>
             <div>count2</div>
             <p>You clicked {count2} times</p>

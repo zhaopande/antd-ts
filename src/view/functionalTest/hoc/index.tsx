@@ -96,5 +96,4 @@ class TestHoc extends React.Component<TestHocProps, TestHocState> {
 // }
 
 const getHoc = CreacteHOC(TestHoc);
-console.log(getHoc);
 export default getHoc;
