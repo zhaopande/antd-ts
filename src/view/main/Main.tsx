@@ -39,7 +39,7 @@ class Main extends React.Component<MainProps, MainState> {
     }
     public itemOnclick(item: any) {
         console.log(item);
-        this.setState({
+        this.setState({ 
             currentPathName: item.key
         })
     }
