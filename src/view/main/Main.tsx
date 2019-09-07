@@ -7,6 +7,7 @@ import "./main.css";
 
 import FunctionalTest from '@/view/functionalTest';
 import UserManagement from '@/view/userManagement';
+import PrivateRouter from "@/util/PrivateRouter"
 const { Header } = Layout;
 
 
@@ -39,7 +40,7 @@ class Main extends React.Component<MainProps, MainState> {
     }
     public itemOnclick(item: any) {
         console.log(item);
-        this.setState({ 
+        this.setState({
             currentPathName: item.key
         })
     }
@@ -61,8 +62,10 @@ class Main extends React.Component<MainProps, MainState> {
                 </Menu>
             </Header>
             <Switch>
-                <Route path="/functionaltest" component={FunctionalTest} />
-                <Route path="/usermanage" component={UserManagement} />
+                <PrivateRouter>
+                    <Route path="/functionaltest" component={FunctionalTest} />
+                    <Route path="/usermanage" component={UserManagement} />
+                </PrivateRouter>
             </Switch>
 
         </Layout>

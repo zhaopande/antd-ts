@@ -26,7 +26,7 @@ class UserList extends React.Component<UserListProps, UserListState> {
             {this.state.tableData}
             <span>adduser</span>
             <Link to="/main/userList"><Button>userList</Button></Link>
-            <Example />
+            {/* <Example /> */}
             {/* <User name={this.name} age={12} sex={true} /> */}
         </div>);
     }
